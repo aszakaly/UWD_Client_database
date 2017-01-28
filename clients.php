@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+//if user is not logged in
+if (!$_SESSION['loggedInUser']) {
+
+    //send the user to login page
+    header("Location: index.php");
+}
+
+
+
 include('includes/header.php');
 ?>
 

@@ -40,6 +40,9 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="navbar-collapse">
+               <?php
+                if ($_SESSION['loggedInUser']) { //if user is logged in
+                ?>
                 <ul class="nav navbar-nav">
                     <li><a href="clients.php">My Clients</a></li>
                     <li><a href="add.php">Add Client</a></li>
@@ -49,6 +52,19 @@
                     <p class="navbar-text">Aloha, Akos!</p>
                     <li><a href="logout.php">Log out</a></li>
                 </ul>
+
+                <?php
+                } else {
+                ?>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="index.php">Log in</a></li>
+                </ul>
+
+                <?php
+                }
+                ?>
+
             </div><!-- /.navbar-collapse -->
         </div>
     </nav>
