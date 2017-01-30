@@ -1,21 +1,21 @@
 <?php
 session_start();
 
-//if user is not logged in
-if(!$_SESSION['loggedInUser']) {
+// if user is not logged in
+if( !$_SESSION['loggedInUser'] ) {
 
-    //send the user to login page
+    // send them to the login page
     header("Location: index.php");
 }
 
-//connect to database
+// connect to database
 include('includes/connection.php');
 
-//query & result
+// query & result
 $query = "SELECT * FROM clients";
 $result = mysqli_query( $conn, $query );
 
-// close connection
+// close the mysql connection
 mysqli_close($conn);
 
 include('includes/header.php');
@@ -34,16 +34,15 @@ include('includes/header.php');
    </tr>
 
    <?php
-
     if( mysqli_num_rows($result) > 0 ) {
 
         //we have data
         //output the data
 
-        while( $row = mysqli_fetch_assoc($result) ) {
+         while( $row = mysqli_fetch_assoc($result) ) {
             echo "<tr>";
 
-            echo "<td>" . $row['name'] . "</td><td>" . $row['email'] . "</td><td>" $row['phone']."</td><td>" . $row['address'] . "</td><td>" . $row['company'] . "</td><td>" . $row['notes'] . "</td>";
+            echo "<td>" . $row['name'] . "</td><td>" . $row['email'] . "</td><td>" . $row['phone'] . "</td><td>" . $row['address'] . "</td><td>" . $row['company'] . "</td><td>" . $row['notes'] . "</td>";
 
             echo '<td><a href="edit.php?id=' . $row['id'] . '" type="button" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-edit"></span>
@@ -52,12 +51,12 @@ include('includes/header.php');
             echo "</tr>";
         }
     } else { //if no clients
-        echo "<div class='alert alert-warning'>You have no clients!</div>"
+        echo "<div class='alert alert-warning'>You have no clients!</div>";
     }
-
     mysqli_close($conn);
 
     ?>
+
     <tr>
         <td colspan="7"><div class="text-center"><a href="add.php" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span> Add Client</a></div></td>
     </tr>
