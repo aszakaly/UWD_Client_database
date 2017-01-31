@@ -45,7 +45,7 @@ if (isset($_POST['login'])) {
 
     } else { //no results in database
         //error message
-        $loginError= "<div class='alert alert-danger'>No such user in database. Please try again. <a class='close' data-dismiss='alert'>&times</a></div>";
+        $loginError= "<div class='alert alert-danger'>No such user in database. Please try again. <a class='close' data-dismiss='alert'>&times;</a></div>";
     }
 }
 

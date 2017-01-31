@@ -15,6 +15,15 @@ include('includes/connection.php');
 $query = "SELECT * FROM clients";
 $result = mysqli_query( $conn, $query );
 
+// check for query string
+if(isset( $_GET['alert'] )){
+
+    // new client added
+    if ( $_GET['alert']=='success' ){
+        $alertMessage = "<div class='alert alert-success'>New client added<a class='close' data-dismiss='alert'>&times;</a></div>";
+    }
+}
+
 // close the mysql connection
 mysqli_close($conn);
 
@@ -22,6 +31,9 @@ include('includes/header.php');
 ?>
 
 <h1>Client Address Book</h1>
+
+<?php echo $alertMessage; ?>
+
 <table class="table table-striped table-bordered">
    <tr>
        <th>Name</th>
