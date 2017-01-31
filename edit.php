@@ -1,31 +1,104 @@
 <?php
+session_start();
+
+// if user is not logged in
+if( !$_SESSION['loggedInUser'] ) {
+
+    // send them to the login page
+    header("Location: index.php");
+}
+
+// get ID sent by GET collection
+$clientID = $_GET['id'];
+
+// connect to database
+include('includes/connection.php');
+
+// include functions file
+include('includes/functions.php');
+
+// query the database with client ID
+$query = "SELECT * FROM clients where id='$clientID'";
+$result = mysqli_query( $conn, $query );
+
+// if result is returned
+if( mysqli_num_rows($result) > 0 ) {
+
+    // we have data!
+    // set some variables
+    while( $row = mysqli_fetch_assoc($result)) {
+        $clientName     = $row['name'];
+        $clientEmail    = $row['email'];
+        $clientPhone    = $row['phone'];
+        $clientAddress  = $row['address'];
+        $clientCompany  = $row['company'];
+        $clientNotes    = $row['notes'];
+    }
+} else { // no results returned
+    $alertMessage = "<div class='alert alert-warning'>Nothing to see here. <a href='clients.php'>Head back</a>.</div>";
+}
+
+// if update button was pushed
+if( isset($_POST['update']) ) {
+
+    // set variables
+    $clientName     = validateFormData( $_POST["clientName"] );
+    $clientEmail    = validateFormData( $_POST["clientEmail"] );
+    $clientPhone    = validateFormData( $_POST["clientPhone"] );
+    $clientAddress  = validateFormData( $_POST["clientAddress"] );
+    $clientCompany  = validateFormData( $_POST["clientCompany"] );
+    $clientNotes    = validateFormData( $_POST["clientNotes"] );
+
+
+    // new database query and result
+    $query = "UPDATE clients
+                SET name='$clientName',
+                email='$clientEmail',
+                phone='$clientPhone',
+                address='$clientAddress',
+                company='$clientCompany',
+                notes='$clientNotes' WHERE id='$clientID'";
+
+    $result = mysqli_query( $conn, $query );
+
+    if ( $result ) {
+
+        //redurect to client page with query string
+        header("Location: clients.php?alert=updatesuccess");
+    } else {
+        echo "Error updating record: ". mysqli_error($conn);
+    }
+
+}
+
+
 include('includes/header.php');
 ?>
     <h1>Add Client</h1>
-    <form action="clients.php" method="post" class="row">
+    <form action="<?php echo htmlspecialchars( $_SERVER['PHP_SELF']); ?>?id=<?php echo $clientID; ?>" method="post" class="row">
         <div class="form-group col-sm-6">
             <label for="client-name">Name *</label>
-            <input type="text" class="form-control input-lg" id="client-name" name="clientName" value="John Doe">
+            <input type="text" class="form-control input-lg" id="client-name" name="clientName" value="<?php echo $clientName ?>">
         </div>
         <div class="form-group col-sm-6">
             <label for="client-email">Email *</label>
-            <input type="text" class="form-control input-lg" id="client-email" name="clientEmail" value="johndoe@email.com">
+            <input type="text" class="form-control input-lg" id="client-email" name="clientEmail" value="<?php echo $clientEmail ?>">
         </div>
         <div class="form-group col-sm-6">
             <label for="client-phone">Phone</label>
-            <input type="text" class="form-control input-lg" id="client-phone" name="clientPhone" value="(123) 456-7890">
+            <input type="text" class="form-control input-lg" id="client-phone" name="clientPhone" value="<?php echo $clientPhone ?>">
         </div>
         <div class="form-group col-sm-6">
             <label for="client-address">Address</label>
-            <input type="text" class="form-control input-lg" id="client-address" name="clientAddress" value="111 Address Street, Calgary, AB T1G 2KY">
+            <input type="text" class="form-control input-lg" id="client-address" name="clientAddress" value="<?php echo $clientAddress ?>">
         </div>
         <div class="form-group col-sm-6">
             <label for="client-company">Company</label>
-            <input type="text" class="form-control input-lg" id="client-company" name="clientCompany" value="Brightside Studios Inc.">
+            <input type="text" class="form-control input-lg" id="client-company" name="clientCompany" value="<?php echo $clientCompany ?>">
         </div>
         <div class="form-group col-sm-6">
             <label for="client-notes">Notes</label>
-            <textarea type="text" class="form-control input-lg" id="client-notes" name="clientNotes">Great guy. Usually pays early.</textarea>
+            <textarea type="text" class="form-control input-lg" id="client-notes" name="clientNotes"><?php echo $clientNotes ?></textarea>
         </div>
         <div class="col-sm-12">
             <button type="submit" class="btn btn-lg btn-danger pull-left" name="delete">Delete</button>
