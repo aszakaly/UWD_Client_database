@@ -71,10 +71,48 @@ if( isset($_POST['update']) ) {
 
 }
 
+// if delete button was submitted
+if( isset($_POST['delete']) ) {
+    $alertMessage = "<div class='alert alert-danger'>
+        <p>Are you sure you want to delete this client? No take backs!</p>
+
+        <form action='". htmlspecialchars( $_SERVER["PHP_SELF"]) ."?id=$clientID' method='post'>
+
+        <input type='submit' class='btn btn-danger btn-sm' name='confirm-delete' value='Yes, delete!'>
+
+        <a type='button' class='btn btn-default btn-sm' data-dismiss='alert'>Oops, no thanks!</a>
+   </form>
+   </div>";
+}
+
+if( isset($_POST['confirm-delete']) ) {
+
+    //new database query & result
+    $query = "DELETE FROM clients WHERE id='$clientID'";
+    $result = mysqli_query($conn, $query);
+
+    if ( $result ) {
+
+        //redurect to client page with query string
+        header("Location: clients.php?alert=deleted");
+    } else {
+        echo "Error updating record: ". mysqli_error($conn);
+    }
+}
+
+// close the mysql connection
+mysqli_close($conn);
+
+
+
 
 include('includes/header.php');
 ?>
+
     <h1>Add Client</h1>
+
+    <?php echo $alertMessage; ?>
+
     <form action="<?php echo htmlspecialchars( $_SERVER['PHP_SELF']); ?>?id=<?php echo $clientID; ?>" method="post" class="row">
         <div class="form-group col-sm-6">
             <label for="client-name">Name *</label>
