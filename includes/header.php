@@ -49,7 +49,10 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <p class="navbar-text">Aloha, Akos!</p>
+                    <p class="navbar-text"><?php
+                        $loggedInMessage="Aloha, ". $_SESSION['loggedInUser'];
+                        echo $loggedInMessage;
+                        ?></p>
                     <li><a href="logout.php">Log out</a></li>
                 </ul>
 
